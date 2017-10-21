@@ -1,6 +1,7 @@
 package xmirlib
 
 import (
+	"crypto/tls"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,7 +11,12 @@ import (
 
 // IsJoomla : Does this server run Joomla?
 func IsJoomla(host string, port int) bool {
-	resp, err := http.Get("http://" + host + ":" + strconv.Itoa(port))
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	client := &http.Client{Transport: tr}
+
+	resp, err := client.Get("http://" + host + ":" + strconv.Itoa(port))
 	if err != nil {
 		log.Print(err)
 	}

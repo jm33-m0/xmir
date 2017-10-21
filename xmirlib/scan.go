@@ -16,7 +16,8 @@ func ScanList(filepath string) {
 
 	for _, line := range lines {
 		host := strings.Trim(line, "\n")
-		if IsJoomla(host, 80) {
+		if IsJoomla(host, 80) ||
+			IsJoomla(host, 443) {
 			log.Print("Found one! ", host)
 		}
 	}
