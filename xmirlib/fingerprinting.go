@@ -1,4 +1,4 @@
-package xmir
+package xmirlib
 
 import (
 	"io/ioutil"
