@@ -7,5 +7,5 @@ import (
 
 func main() {
 	log.Println("let's begin")
-	xmirlib.ScanList("iplist.txt")
+	xmirlib.ScanList("iplist.txt", "Joomla")
 }
