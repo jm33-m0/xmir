@@ -12,6 +12,25 @@ import (
 
 // IsJoomla : Does this server run Joomla?
 func IsJoomla(host string, port int) bool {
+
+	targetURL := "http://" + host + ":" + strconv.Itoa(port) + "/"
+	if port == 443 {
+		targetURL = "https://" + host + ":" + strconv.Itoa(port) + "/"
+	}
+	respBody := getPage(targetURL)
+	if respBody == nil {
+		return false
+	}
+
+	if strings.Contains(string(respBody), `<meta name="generator" content="Joomla! 1.5 - Open Source Content Management" />`) {
+		return true
+	}
+	return false
+}
+
+// Get webpage from target http server for further analysis
+func getPage(targetURL string) []byte {
+
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
@@ -20,12 +39,10 @@ func IsJoomla(host string, port int) bool {
 		Timeout:   10 * time.Second,
 	}
 
-	targetURL := "http://" + host + ":" + strconv.Itoa(port) + "/"
-	log.Print(targetURL)
 	resp, err := client.Get(targetURL)
 	if err != nil {
 		log.Print(err)
-		return false
+		return nil
 	}
 	resp.Close = true
 	defer resp.Body.Close()
@@ -34,9 +51,5 @@ func IsJoomla(host string, port int) bool {
 	if err != nil {
 		log.Print(err)
 	}
-
-	if strings.Contains(string(respBody), `<meta name="generator" content="Joomla! 1.5 - Open Source Content Management" />`) {
-		return true
-	}
-	return false
+	return respBody
 }
