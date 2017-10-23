@@ -39,6 +39,11 @@ func runFingerprinting(target string, serverType string) {
 			IsJoomla(target, 443) {
 			log.Print("[+] Joomla found! ", target)
 		}
+	case "WordPress":
+		if IsWordPress(target, 80) ||
+			IsWordPress(target, 443) {
+			log.Print("[+] WordPress found! ", target)
+		}
 	default:
 		log.Println("Please specify a server type, eg. Joomla")
 	}

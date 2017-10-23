@@ -5,7 +5,7 @@ web server fingerprinting
 ## supported servers
 
 - [x] Joomla
-- [ ] WordPress
+- [x] WordPress
 - [ ] WebLogic
 - [ ] Struts2
 - [ ] MS IIS
