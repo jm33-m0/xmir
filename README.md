@@ -12,4 +12,14 @@ web server fingerprinting
 
 ## usage
 
-still in early-stage dev
+```
+Usage of ./xmir:
+  -file string
+    	Masscan result file in XML format
+  -outfile string
+    	IP list file for XML parser output
+  -result string
+    	Scan result
+  -server string
+    	Specify a server software
+```
