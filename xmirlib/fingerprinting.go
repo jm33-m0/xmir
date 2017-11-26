@@ -17,7 +17,7 @@ func IsJoomla(host string, port int) bool {
 		return false
 	}
 
-	if strings.Contains(string(respBody), `<meta name="generator" content="Joomla! 1.5 - Open Source Content Management" />`) {
+	if strings.Contains(string(respBody), `<meta name="generator" content="Joomla!`) {
 		return true
 	}
 	return false
