@@ -50,7 +50,7 @@ func getPage(host string, port int) []byte {
 	}
 	client := &http.Client{
 		Transport: tr,
-		Timeout:   10 * time.Second,
+		Timeout:   3 * time.Second,
 	}
 
 	resp, err := client.Get(targetURL)

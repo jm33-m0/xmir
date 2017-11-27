@@ -55,8 +55,15 @@ func XML2List(xmlfile string, outfile string, filter string) {
 	}
 	defer xmlStream.Close()
 
-	decoder := xml.NewDecoder(xmlStream)
+	// open outfile
+	outf, err := OpenFileStream(outfile)
+	if err != nil {
+		log.Println("Error opening ", outfile+"\n", err)
+		return
+	}
+	defer CloseFileStream(outf)
 
+	decoder := xml.NewDecoder(xmlStream)
 	for {
 		// Read tokens from the XML document in a stream.
 		t, _ := decoder.Token()
@@ -75,35 +82,45 @@ func XML2List(xmlfile string, outfile string, filter string) {
 				// port := h.Ports[0].Portid
 
 				banner := h.Ports[0].Service.Banner
-				// test value reading
-				// log.Print(address, " : ", port, "\n", banner)
 
 				// write desired host to file
 				if searchHost(filter, banner) {
-					AppendToFile(outfile, address)
+					AppendToFile(outf, address)
 				}
 			}
 		default:
 		}
 	}
+
+	// close outfile
+	CloseFileStream(outf)
 }
 
 // AppendToFile : append a line to target file
-func AppendToFile(filepath string, line string) {
+func AppendToFile(file *os.File, line string) (err error) {
+	// write appendly
+	if _, err = file.Write([]byte(line + "\n")); err != nil {
+		log.Print("Write err: ", err, "\nWriting ", line)
+		return err
+	}
+	return nil
+}
 
+// OpenFileStream : open file for writing
+func OpenFileStream(filepath string) (file *os.File, err error) {
 	// open outfile
-	out, err := os.OpenFile(filepath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err = os.OpenFile(filepath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Print(filepath, " : Failed to open file\n", err)
-		return
+		return nil, err
 	}
+	return file, nil
+}
 
-	// write appendly
-	if _, err = out.Write([]byte(line + "\n")); err != nil {
-		log.Print(filepath, " : Write err: ", err, "\nWriting ", line)
-		return
-	}
-	out.Close()
+// CloseFileStream : Close file when we are done with it
+func CloseFileStream(file *os.File) (err error) {
+	err = file.Close()
+	return err
 }
 
 // FileToLines : Read lines from a text file
