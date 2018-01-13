@@ -32,7 +32,7 @@ func ScanList(filepath string, outfile string, serverType string) {
 			wg.Done()
 		}()
 		i++
-		if i == 200 {
+		if i == 200 && &wg != nil {
 			i = 0
 			wg.Wait()
 		}
