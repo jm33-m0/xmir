@@ -3,6 +3,7 @@ package xmirlib
 import (
 	"crypto/tls"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -39,6 +40,8 @@ func IsWordPress(host string, port int) bool {
 
 // Get webpage from target http server for further analysis
 func getPage(host string, port int) []byte {
+	// Disable default logger
+	log.SetOutput(ioutil.Discard)
 
 	targetURL := "http://" + host + ":" + strconv.Itoa(port) + "/"
 	if port == 443 {
